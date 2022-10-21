@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            SingletonManager.Instance.ToBattle(this.transform);
+
         }
     }
 }
