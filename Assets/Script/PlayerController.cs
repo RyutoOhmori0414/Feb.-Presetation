@@ -9,11 +9,9 @@ public class PlayerController : MonoBehaviour
     float _moveSpeed = 5f;
 
     Rigidbody _rb;
-    SceneSwitcher _sceneSwitcher;
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _sceneSwitcher = FindObjectOfType<SceneSwitcher>();
     }
     private void Update()
     {
