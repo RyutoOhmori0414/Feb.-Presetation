@@ -8,10 +8,12 @@ public class PlayerController : MonoBehaviour
     [Tooltip("プレイヤーのスピード"), SerializeField]
     float _moveSpeed = 5f;
 
+    GameController _gameController;
     Rigidbody _rb;
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _gameController = FindObjectOfType<GameController>();
     }
     private void Update()
     {
@@ -28,7 +30,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            _sceneSwitcher.LoadButtleScene();
+            _gameController.TransitonToButtle();
         }
     }
 }
