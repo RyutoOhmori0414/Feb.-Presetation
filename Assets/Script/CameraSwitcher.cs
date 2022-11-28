@@ -6,15 +6,15 @@ using UnityEngine;
 public class CameraSwitcher : MonoBehaviour
 {
     [Tooltip("バトルシーンのバーチャルカメラ"), SerializeField]
-    CinemachineVirtualCamera _buttleVirtualCamera;
+    CinemachineVirtualCamera _battleVirtualCamera;
 
-    public void CameraTransitionToButtle()
+    public void CameraTransitionToBattle()
     {
-        _buttleVirtualCamera.Priority += 10;
+        _battleVirtualCamera.Priority += 10;
     }
 
     public void CameraTransitionToMap()
     {
-        _buttleVirtualCamera.Priority -= 10;
+        _battleVirtualCamera.Priority -= 10;
     }
 }

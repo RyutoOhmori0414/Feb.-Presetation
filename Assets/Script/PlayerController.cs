@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            _gameController.TransitonToButtle();
+            _gameController.TransitonToBattle();
         }
     }
 }
