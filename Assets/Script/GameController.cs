@@ -7,13 +7,13 @@ using UnityEngine.Events;
 public class GameController : MonoBehaviour
 {
     [SerializeField]
-    UnityEvent _onTransitionToButtle;
+    UnityEvent _onTransitionToBattle;
     [SerializeField]
     UnityEvent _onTransitionToMap;
     
-    public void TransitonToButtle()
+    public void TransitonToBattle()
     {
-        _onTransitionToButtle.Invoke();
+        _onTransitionToBattle.Invoke();
     }
 
     public void TransitonToMap()
