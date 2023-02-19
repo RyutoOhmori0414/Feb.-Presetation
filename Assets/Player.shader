@@ -3,6 +3,7 @@ Shader "Custom/Player"
     Properties
     {
         _Color ("Color", Color) = (1, 1, 1, 1)
+        _BackColor ("BackColor", Color) = (1, 1, 1, 1)
         _PositionFactor ("Position Factor", Range(0, 1)) = 0.5
     }
     SubShader
@@ -10,10 +11,10 @@ Shader "Custom/Player"
         Tags { "RenderType"="Opaque" }
         LOD 100
 
-        Cull Off
-
         Pass
         {
+            Cull Off
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -22,6 +23,7 @@ Shader "Custom/Player"
             #include "UnityCG.cginc"
 
             uniform fixed4 _Color;
+            uniform fixed4 _BackColor;
             uniform float _PositionFactor;
 
             struct appdata
@@ -62,9 +64,9 @@ Shader "Custom/Player"
                 }
             }
 
-            fixed4 frag (g2f i) : SV_Target
+            fixed4 frag (g2f i, fixed facing : VFACE) : SV_Target
             {
-                return _Color;
+                return facing > 0 ? _Color : _BackColor;
             }
             ENDCG
         }
