@@ -25,12 +25,4 @@ public class PlayerController : MonoBehaviour
        dir.y = 0;
         _rb.velocity = dir.normalized * _moveSpeed + _rb.velocity.y * Vector3.up;
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            _gameController.TransitonToBattle();
-        }
-    }
 }
