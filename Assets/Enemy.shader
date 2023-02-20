@@ -1,10 +1,10 @@
-Shader "Custom/Player"
+Shader "Custom/Enemy"
 {
     Properties
     {
-        _Color ("Color", Color) = (1, 1, 1, 1)
+        _Color ("MainColor", Color) = (1, 1, 1, 1)
         _BackColor ("BackColor", Color) = (1, 1, 1, 1)
-        _PositionFactor ("Position Factor", Range(0, 1)) = 0.5
+        _PositionFactor ("PositionFactor", Range(0, 1)) = 0.5
     }
     SubShader
     {
@@ -14,18 +14,15 @@ Shader "Custom/Player"
         Pass
         {
             Cull Off
-
+            
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma geometry geom
+            // make fog work
             #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
-
-            uniform fixed4 _Color;
-            uniform fixed4 _BackColor;
-            uniform float _PositionFactor;
 
             struct appdata
             {
@@ -34,23 +31,22 @@ Shader "Custom/Player"
 
             struct g2f
             {
-                float4 vertex : SV_POSITION;
                 UNITY_FOG_COORDS(1)
+                float4 vertex : SV_POSITION;
             };
+
+            uniform fixed4 _Color;
+            uniform fixed4 _BackColor;
+            uniform float _PositionFactor;
 
             appdata vert (appdata v)
             {
-                
                 return v;
             }
 
-            // ジオメトリーシェーダ
-            // 引数のinputは文字通り頂点シェーダからの出力
-            // streamは参照渡しで次の処理に値を受け渡している。TriangleStream<>で三角面を出力している
-            [maxvertexcount(3)] // 出力する頂点数
-            void geom(triangle appdata input[3], inout TriangleStream<g2f> stream)
+            [maxvertexcount(3)]
+            void geom (triangle appdata input[3], inout TriangleStream<g2f> stream)
             {
-                // [0]の頂点を基準にしベクトルを算出して、その外積を取ることで法線を求めている
                 float3 vec1 = input[1].vertex - input[0].vertex;
                 float3 vec2 = input[2].vertex - input[0].vertex;
                 float3 normal = normalize(cross(vec1, vec2));
