@@ -12,6 +12,8 @@ Shader "Unlit/MyUnlit"
             "RenderPipeline"="UniversalPipeline"
         }
         LOD 100
+
+        
         
         // ŠePass‚Åcbuffer‚ª•Ï‚í‚ç‚È‚¢‚æ‚¤‚É‚±‚±‚É’è‹`‚·‚é
         HLSLINCLUDE
@@ -30,6 +32,13 @@ Shader "Unlit/MyUnlit"
         {
             Name "ForwardLit"
             Tags { "LightMode"="UniversalForward" }
+            Stencil
+            {
+                Ref 1
+                Comp Always
+                Pass Replace
+            }
+
 
             HLSLPROGRAM
             #pragma vertex vert
