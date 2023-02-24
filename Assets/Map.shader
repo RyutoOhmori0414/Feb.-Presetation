@@ -8,6 +8,7 @@ Shader "Unlit/MyUnlit"
     SubShader
     {
         Tags {
+            "Queue" = "Geometry+100"
             "RenderType"="Opaque"
             "RenderPipeline"="UniversalPipeline"
         }
@@ -28,13 +29,16 @@ Shader "Unlit/MyUnlit"
         CBUFFER_END
         ENDHLSL
         
+
+
         Pass
         {
             Name "ForwardLit"
             Tags { "LightMode"="UniversalForward" }
+
             Stencil
             {
-                Ref 1
+                Ref 5
                 Comp Always
                 Pass Replace
             }
