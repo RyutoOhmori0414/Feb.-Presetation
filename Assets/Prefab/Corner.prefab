@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2994089351194772236}
   - component: {fileID: 2332929161332451056}
   - component: {fileID: 8912724719995261296}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -535,7 +535,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6248111252950861852}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Corner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -573,7 +573,7 @@ GameObject:
   - component: {fileID: 2985997321628354928}
   - component: {fileID: 7066620036393953685}
   - component: {fileID: 3248423825159590425}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}

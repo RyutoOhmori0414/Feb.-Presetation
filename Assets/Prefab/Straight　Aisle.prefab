@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 600121114108668208}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "Straight\u3000Aisle"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 1010229300624701059}
   - component: {fileID: 2443817770625362657}
   - component: {fileID: 2827012001879188282}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -333,7 +333,7 @@ GameObject:
   - component: {fileID: 520708967571868777}
   - component: {fileID: 6731375902624771342}
   - component: {fileID: 6742777316344217569}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
