@@ -10,7 +10,7 @@ Shader "Custom/Enemy"
         [Space]
         [Enum(UnityEngine.Rendering.CompareFunction)]
         _ZTest("ZTest", Float) = 1
-        [KeywordEnum(Normal, Transparent)]
+        [Toggle(_TRANSPARENT)]
         _Type("Type", Float) = 0
         [Toggle(_DIFFUSION)]
         _Diffusion ("random Diffusion", Float) = 0
@@ -24,9 +24,10 @@ Shader "Custom/Enemy"
             "RenderPipeline"="UniversalPipeline"
         }
         LOD 100
-        blend SrcAlpha OneMinusSrcAlpha
+        blend SrcColor OneMinusSrcAlpha
         Cull Off
         ZTest [_ZTest]
+        ZWrite Off
 
         // UnityのDeferredレンダリングは複数パスに対応しておらず最初のパスが出力されるのみ
         Pass
@@ -37,7 +38,7 @@ Shader "Custom/Enemy"
             #pragma geometry geom
             // make fog work
             #pragma multi_compile_fog
-            #pragma multi_compile _TYPE_NORMAL _TYPE_TRANSPARENT
+            #pragma multi_compile _ _TRANSPARENT
             #pragma multi_compile _ _DIFFUSION
 
             #include "UnityCG.cginc"
@@ -46,6 +47,7 @@ Shader "Custom/Enemy"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+                //float3 normal : NORMAL;
             };
 
             struct g2f
@@ -53,6 +55,7 @@ Shader "Custom/Enemy"
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
+                //float3 normal : NORMAL;
             };
 
             uniform fixed4 _Color;
@@ -109,6 +112,7 @@ Shader "Custom/Enemy"
 
                     v.vertex.xyz += normal * _PositionFactor * random;
                     o.vertex = UnityObjectToClipPos(v.vertex);
+                    // o.normal = UnityObjectToWorldNormal(v.normal);
                     o.uv = v.uv;
                     UNITY_TRANSFER_FOG(o, o.vertex);
                     stream.Append(o);
@@ -118,12 +122,14 @@ Shader "Custom/Enemy"
             fixed4 frag (g2f i, fixed facing : VFACE) : SV_Target
             {
                 float4 col;
-            #ifdef _TYPE_NORMAL
+            #ifdef _TRANSPARENT
+                col = _TransparentColor;
+
+            #else
                 col = facing > 0 ? _Color : _BackColor;
                 
                 UNITY_APPLY_FOG(i.fogCoord, col);
-            #elif _TYPE_TRANSPARENT
-                col = _TransparentColor;
+            
             #endif
                 col.rgb *= col.a;
                 return col;
