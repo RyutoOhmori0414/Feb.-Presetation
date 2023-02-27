@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField, Tooltip("アビリティの使用可能回数")]
+    int _abilityCount = 3;
+
+    public int AbilityConnt
+    { get => _abilityCount; }
+
     int _currentEnemyCount = 0;
 
     /// <summary>アビリティ１使用時に、呼ばれるEvent</summary>
@@ -21,8 +27,9 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         // アビリティ1のボタンを押した際の処理
-        if (Input.GetButtonDown("Ability1"))
+        if (Input.GetButtonDown("Ability1") && _abilityCount > 0)
         {
+            _abilityCount--;
             _ability1.Invoke();
             Debug.Log("Q");
         }
