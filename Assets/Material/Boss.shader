@@ -100,8 +100,8 @@ Shader "Unlit/Boss"
                 float2 uv2 = input[2].texcoord;
 
                 // Ç«ÇÍÇæÇØäOÇ…âüÇµèoÇ∑Ç©
-                float extrusion = saturate(cos(_LocalTime * 3.14 * 2));
-                extrusion *= 1 + sin(pid * _LocalTime);
+                float extrusion = saturate(0.4 - cos(_LocalTime * 3.14 * 2) * 0.4);
+                extrusion *= 1 + 0.3 * sin(pid + _LocalTime);
 
                 float3 worldNormal = ConstructNormal(wp0, wp1, wp2);
                 float3 extNormal = worldNormal * extrusion * _Range;
@@ -146,7 +146,7 @@ Shader "Unlit/Boss"
                 float diffuse = saturate(dot(normal, lightDir));
                 col.rgb *= diffuse;
 
-                //col.rgb = MixFog(col.rgb, i.fogFactor);
+                col.rgb = MixFog(col.rgb, i.fogFactor);
 
                 return col;
             }

@@ -13,24 +13,36 @@ public class AimingController : MonoBehaviour
     Transform _playerTransform;
 
     LineRenderer _lineRenderer;
+    UIController _uiController;
 
     private void Awake()
     {
         _lineRenderer = GetComponent<LineRenderer>();
+        _uiController = FindObjectOfType<UIController>();
     }
 
     void Update()
     {
         RaycastHit hit;
         Debug.DrawLine(Camera.main.transform.position, _targetTranform.position, Color.cyan);
+        bool hitCheck = Physics.Linecast(Camera.main.transform.position, _targetTranform.position, out hit) 
+            && hit.collider.tag == "Enemy";
 
-        if (Physics.Linecast(Camera.main.transform.position, _targetTranform.position, out hit, _layerMask) && Input.GetButtonDown("Fire1"))
+        if (hitCheck && Input.GetButtonDown("Fire1"))
         {
             Debug.Log(hit.collider.name);
             var enemyController = hit.collider.gameObject.GetComponent<EnemyController>();
             enemyController?.IsAttacked();
 
             StartCoroutine(BulletShot(_playerTransform.position, hit.point));
+        }
+        else if (hitCheck)
+        {
+            _uiController.Aim();
+        }
+        else
+        {
+            _uiController.NotAim();
         }
     }
 
