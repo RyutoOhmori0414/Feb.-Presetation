@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour
 {
     [SerializeField, Tooltip("アビリティの使用可能回数")]
     int _abilityCount = 3;
+    [SerializeField, Tooltip("BossStageのスポーン地点")]
+    Transform _bossStageStart;
 
     public int AbilityConnt
     { get => _abilityCount; }
@@ -16,12 +18,26 @@ public class GameController : MonoBehaviour
 
     /// <summary>アビリティ１使用時に、呼ばれるEvent</summary>
     Action _ability1;
-
     /// <summary>アビリティ１使用時に、呼ばれるEvent</summary>
     public Action Ability1
     {
         get => _ability1;
         set => _ability1 = value;
+    }
+
+    /// <summary>敵のカウント</summary>
+    Action _toBossStage;
+    public Action ToBossStage
+    {
+        get => _toBossStage;
+        set => _toBossStage = value;
+    }
+
+    Transform _playerTransform;
+
+    private void Start()
+    {
+        _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     private void Update()
@@ -47,5 +63,10 @@ public class GameController : MonoBehaviour
         _currentEnemyCount--;
 
         // 敵が0になったらBossのシーンに飛ぶ
+        if (_currentEnemyCount == 0)
+        {
+            _toBossStage.Invoke();
+            _playerTransform.position = _bossStageStart.position;
+        }
     }
 }

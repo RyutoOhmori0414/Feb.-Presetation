@@ -31,7 +31,7 @@ public class EnemyController : MonoBehaviour
     void Ability1()
     {
         // 敵がSearchされているアニメーションを呼ぶ
-        _anim.SetTrigger("Search");
+        //_anim.SetTrigger("Search");
     }
 
     private void OnDisable()
