@@ -1,4 +1,4 @@
-Shader "Unlit/Boss"
+Shader "Unlit/TitleBoss"
 {
     Properties
     {
@@ -17,7 +17,14 @@ Shader "Unlit/Boss"
         }
         LOD 100
 
-       
+        HLSLINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+
+
+        CBUFFER_START(UnityPerMaterial)
+        CBUFFER_END
+        ENDHLSL
 
         Pass
         {
@@ -145,127 +152,15 @@ Shader "Unlit/Boss"
 
                 float4 shadowCoord = TransformWorldToShadowCoord(i.posW);
                 Light mainLight = GetMainLight(shadowCoord);
+                float3 view = GetWorldSpaceNormalizeViewDir(i.posW.xyz);
                 float3 normal = normalize(i.normal);
-                float3 lightDir = normalize(mainLight.direction);
-                float diffuse = saturate(dot(normal, lightDir));
+                float diffuse = saturate(dot(normal, view));
                 col.rgb *= diffuse;
 
                 col.rgb = MixFog(col.rgb, i.fogFactor);
 
                 return col;
             }
-            ENDHLSL
-        }
-
-        Pass
-        {
-            Tags { "LightMode"="ShadowCaster" }
-
-            HLSLPROGRAM
-            #pragma vertex vert
-            #pragma geometry geom
-            #pragma fragment frag
-
-            #pragma multi_compile_instancing
-            
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-
-            // ShadowsCasterPass.hlsl に定義されているグローバルな変数
-            float3 _LightDirection;
-            
-            float _LocalTime;
-            float _Range;
-
-            struct Attributes
-            {
-                float4 vertex : POSITION;
-                float3 normal : NORMAL;
-                //UNITY_VERTEX_INPUT_INSTANCE_ID
-            };
-
-            struct Varyings {
-                float4 pos : SV_POSITION;
-            };
-
-            Attributes vert(Attributes v)
-            {
-                v.normal = TransformObjectToWorldNormal(v.normal);
-                return v;
-            }
-
-            Varyings OutVaryings(float3 wpos, float3 wnrm)
-            {
-                Varyings o;
-
-                float3 positionWS = TransformObjectToWorld(wpos);
-                float3 normalWS = TransformObjectToWorldNormal(wnrm);
-                float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
-#if UNITY_REVERSED_Z
-                positionCS.z = min(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
-#else
-                positionCS.z = max(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
-#endif
-                o.pos = positionCS;
-
-                return o;
-            }
-
-            float3 ConstructNormal(float3 v1, float3 v2, float3 v3)
-            {
-                // 面に直行した法線を再計算している
-                return normalize(cross(v2 - v1, v3 - v1));
-            }
-
-            // pidは各ポリゴンのID　それぞれのポリゴンに異なる処理を行うために使用
-            [maxvertexcount(15)]
-            void geom (triangle Attributes input[3], uint pid : SV_PrimitiveID, inout TriangleStream<Varyings> outStream)
-            {
-                float3 wp0 = input[0].vertex.xyz;
-                float3 wp1 = input[1].vertex.xyz;
-                float3 wp2 = input[2].vertex.xyz;
-
-                // どれだけ外に押し出すか
-                float extrusion = saturate(0.4 - cos(_LocalTime * 3.14 * 2) * 0.4);
-                extrusion *= 1 + 0.3 * sin(pid + _LocalTime);
-
-                float3 worldNormal = ConstructNormal(wp0, wp1, wp2);
-                float3 extNormal = worldNormal * extrusion * _Range;
-                float np = saturate(extrusion * 10);
-
-                float3 extPositions[3];
-
-                // 外側
-                [unroll]
-                for(int j = 0; j < 3; j++)
-                {
-                    Attributes temp = input[j];
-                    temp.vertex.xyz += extNormal;
-                    extPositions[j] = temp.vertex.xyz;
-                    temp.normal = lerp(temp.normal, worldNormal, np);
-                    outStream.Append(OutVaryings(extPositions[j], temp.normal));
-                }
-
-                outStream.RestartStrip(); // 新たに三角メッシュを生成する際に必要
-
-                // 側面
-                [unroll]
-                for(int i = 0; i < 3; i++)
-                {
-                    float3 tempNormal = ConstructNormal(extPositions[i], input[i].vertex.xyz, extPositions[(i + 1) % 3]);
-                    outStream.Append(OutVaryings(extPositions[i], worldNormal));
-                    outStream.Append(OutVaryings(input[i].vertex.xyz, worldNormal));
-                    outStream.Append(OutVaryings(extPositions[(i + 1) % 3], worldNormal));
-                    outStream.Append(OutVaryings(input[(i + 1) % 3].vertex.xyz, worldNormal));
-                    outStream.RestartStrip();
-                }
-            }
-
-            float4 frag(Varyings i) : SV_Target
-            {
-                return 0.0;
-            }
-
             ENDHLSL
         }
     }
