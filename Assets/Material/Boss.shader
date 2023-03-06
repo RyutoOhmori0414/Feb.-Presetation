@@ -3,10 +3,15 @@ Shader "Unlit/Boss"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Color ("Color", Color) = (1, 1, 1, 1)
+        [HDR]_Color ("Color", Color) = (1, 1, 1, 1)
          [Space]
         _LocalTime("Animation Time", Float) = 0.0
         _Range ("Range", Float) = 0.0
+        [Space]
+        _DissolveTex ("DissolveTex", 2D) = "white" {}
+        _DissolveAmount ("DissolveAmout", Range(0, 1)) = 0.5
+        _DissolveRange ("DissolveRange", Range(0, 1)) = 0.5
+        _DissolveColor ("DissolveColor", Color) = (1, 1, 1, 1)
     }
     SubShader
     {
@@ -16,6 +21,7 @@ Shader "Unlit/Boss"
             "RenderPipeline"="UniversalPipeline"
         }
         LOD 100
+        blend One OneMinusSrcAlpha
 
        
 
@@ -47,6 +53,12 @@ Shader "Unlit/Boss"
 
             float _LocalTime;
             float _Range;
+
+            sampler2D _DissolveTex;
+            float4 _DissolveTex_ST;
+            float _DissolveAmount;
+            float _DissolveRange;
+            float4 _DissolveColor;
 
             struct Attributes
             {
@@ -139,6 +151,11 @@ Shader "Unlit/Boss"
                 }
             }
 
+            float remap (float value, float outMin)
+            {
+                return value * ((1 - outMin) / 1) + outMin;
+            }
+
             float4 frag (Varyings i) : SV_Target
             {
                 float4 col = _Color;
@@ -151,6 +168,23 @@ Shader "Unlit/Boss"
                 col.rgb *= diffuse;
 
                 col.rgb = MixFog(col.rgb, i.fogFactor);
+
+                // Disolve
+                float dissolve = tex2D(_DissolveTex, i.texcoord).r;
+
+                _DissolveAmount = remap(_DissolveAmount, -_DissolveRange);
+
+                if (dissolve < _DissolveAmount + _DissolveRange)
+                {
+                    col += _DissolveColor;
+                }
+
+                if (dissolve < _DissolveAmount)
+                {
+                    col.a = 0;
+                }
+
+                col.rgb *= col.a; 
 
                 return col;
             }

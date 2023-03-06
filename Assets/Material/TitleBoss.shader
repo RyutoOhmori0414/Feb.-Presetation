@@ -3,7 +3,7 @@ Shader "Unlit/TitleBoss"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Color ("Color", Color) = (1, 1, 1, 1)
+        [HDR]_Color ("Color", Color) = (1, 1, 1, 1)
          [Space]
         _LocalTime("Animation Time", Float) = 0.0
         _Range ("Range", Float) = 0.0

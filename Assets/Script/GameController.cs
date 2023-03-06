@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -33,11 +34,21 @@ public class GameController : MonoBehaviour
         set => _toBossStage = value;
     }
 
+    Action _gameEnd;
+
+    public Action GameEnd
+    {
+        get => _gameEnd;
+        set => _gameEnd = value;
+    }
+
     Transform _playerTransform;
+    AudioSource _audioSource;
 
     private void Start()
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -48,6 +59,7 @@ public class GameController : MonoBehaviour
             _abilityCount--;
             _ability1.Invoke();
             Debug.Log("Q");
+            _audioSource.Play();
         }
     }
 
@@ -68,5 +80,10 @@ public class GameController : MonoBehaviour
             _toBossStage.Invoke();
             _playerTransform.position = _bossStageStart.position;
         }
+    }
+
+    public void ToTitle()
+    {
+        SceneManager.LoadScene("Title");
     }
 }

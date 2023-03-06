@@ -2,8 +2,8 @@ Shader "Custom/Player"
 {
     Properties
     {
-        _Color ("Color", Color) = (1, 1, 1, 1)
-        _BackColor ("BackColor", Color) = (1, 1, 1, 1)
+        [HDR]_Color ("Color", Color) = (1, 1, 1, 1)
+        [HDR]_BackColor ("BackColor", Color) = (1, 1, 1, 1)
         _PositionFactor ("Position Factor", Range(0, 1)) = 0.5
     }
     SubShader
