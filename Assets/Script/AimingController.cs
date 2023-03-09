@@ -14,10 +14,12 @@ public class AimingController : MonoBehaviour
 
     LineRenderer _lineRenderer;
     UIController _uiController;
+    AudioSource _audioSource;
 
     private void Awake()
     {
         _lineRenderer = GetComponent<LineRenderer>();
+        _audioSource = GetComponent<AudioSource>();
         _uiController = FindObjectOfType<UIController>();
     }
 
@@ -30,8 +32,9 @@ public class AimingController : MonoBehaviour
 
         if (hitCheck && Input.GetButtonDown("Fire1"))
         {
+            _audioSource.Play();
             Debug.Log(hit.collider.name);
-            var enemyController = hit.collider.gameObject.GetComponent<EnemyController>();
+            var enemyController = hit.collider.gameObject.GetComponent<IEnemyHit>();
             enemyController?.IsAttacked();
 
             StartCoroutine(BulletShot(_playerTransform.position, hit.point));

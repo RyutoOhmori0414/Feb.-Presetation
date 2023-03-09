@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class FadeAnimController : MonoBehaviour
 {
+    [SerializeField]
+    bool _SceneChange =false;
+
     Animator _animator;
     Image _image;
 
@@ -13,6 +16,11 @@ public class FadeAnimController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _image = GetComponent<Image>();
         _image.enabled = false;
+
+        if (_SceneChange)
+        {
+            DontDestroyOnLoad(transform.root.gameObject);
+        }
     }
 
     public void StartFade()
@@ -23,6 +31,11 @@ public class FadeAnimController : MonoBehaviour
     public void EffectEnd()
     {
         _image.enabled = false;
+
+        if (_SceneChange)
+        {
+            Destroy(transform.root.gameObject);
+        }
     }
 
     IEnumerator ScreenShot()

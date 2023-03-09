@@ -7,21 +7,24 @@ public class EnemyAnimController : MonoBehaviour
 {
     MeshRenderer _meshRenderer;
     LocalKeyword _localKeyword;
+    AudioSource _audioSource;
 
     private void Awake()
     {
         _meshRenderer = GetComponent<MeshRenderer>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
 
     public void RandamDiffusion()
     {
         _meshRenderer.material.EnableKeyword("_DIFFUSION");
+        _audioSource.Play();
     }
 
     public void DestroyObj()
     {
-        Destroy(transform.root.gameObject);
+        Destroy(transform.parent.gameObject);
     }
 
     public void Transparent()

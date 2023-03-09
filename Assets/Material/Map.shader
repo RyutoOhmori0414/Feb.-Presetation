@@ -3,7 +3,12 @@ Shader "Unlit/MyUnlit"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-    }
+        [Enum(UnityEngine.Rendering.CompareFunction)]
+        _StencilComp ("Stencil Comparison", Float) = 8
+        _Stencil ("Stencil ID", Float) = 0
+        [Enum(UnityEngine.Rendering.StencilOp)]
+        _StencilOp ("Stencil Operation", Float) = 0
+        }
 
     SubShader
     {
@@ -38,9 +43,9 @@ Shader "Unlit/MyUnlit"
 
             Stencil
             {
-                Ref 5
-                Comp Always
-                Pass Replace
+                Ref [_Stencil]
+                Comp [_StencilComp]
+                Pass [_StencilOp]
             }
 
 
@@ -75,7 +80,7 @@ Shader "Unlit/MyUnlit"
             v2f vert (appdata v)
             {
                 v2f o;
-                o.vertex = TransformObjectToHClip(v.vertex);
+                o.vertex = TransformObjectToHClip(v.vertex.xyz);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.fogFactor = ComputeFogFactor(o.vertex.z);
                 o.posWS = TransformObjectToWorld(v.vertex.xyz);
@@ -99,56 +104,56 @@ Shader "Unlit/MyUnlit"
             ENDHLSL
         }
     
-        Pass
-        {
-            Tags { "LightMode"="ShadowCaster" }
+//        Pass
+//        {
+//            Tags { "LightMode"="ShadowCaster" }
 
-            HLSLPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
+//            HLSLPROGRAM
+//            #pragma vertex vert
+//            #pragma fragment frag
 
-            #pragma multi_compile_instancing
+//            #pragma multi_compile_instancing
             
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+//            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
-            // ShadowsCasterPass.hlsl に定義されているグローバルな変数
-            float3 _LightDirection;
+//            // ShadowsCasterPass.hlsl に定義されているグローバルな変数
+//            float3 _LightDirection;
             
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float3 normal : NORMAL;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
-            };
+//            struct appdata
+//            {
+//                float4 vertex : POSITION;
+//                float3 normal : NORMAL;
+//                UNITY_VERTEX_INPUT_INSTANCE_ID
+//            };
 
-            struct v2f {
-                float4 pos : SV_POSITION;
-            };
+//            struct v2f {
+//                float4 pos : SV_POSITION;
+//            };
 
-            v2f vert(appdata v)
-            {
-                UNITY_SETUP_INSTANCE_ID(v);
-                v2f o;
-                // ShadowsCasterPass.hlsl の GetShadowPositionHClip() を参考に
-                float3 positionWS = TransformObjectToWorld(v.vertex.xyz);
-                float3 normalWS = TransformObjectToWorldNormal(v.normal);
-                float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
-#if UNITY_REVERSED_Z
-                positionCS.z = min(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
-#else
-                positionCS.z = max(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
-#endif
-                o.pos = positionCS;
+//            v2f vert(appdata v)
+//            {
+//                UNITY_SETUP_INSTANCE_ID(v);
+//                v2f o;
+//                // ShadowsCasterPass.hlsl の GetShadowPositionHClip() を参考に
+//                float3 positionWS = TransformObjectToWorld(v.vertex.xyz);
+//                float3 normalWS = TransformObjectToWorldNormal(v.normal);
+//                float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
+//#if UNITY_REVERSED_Z
+//                positionCS.z = min(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
+//#else
+//                positionCS.z = max(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
+//#endif
+//                o.pos = positionCS;
 
-                return o;
-            }
+//                return o;
+//            }
 
-            float4 frag(v2f i) : SV_Target
-            {
-                return 0.0;
-            }
+//            float4 frag(v2f i) : SV_Target
+//            {
+//                return 0.0;
+//            }
 
-            ENDHLSL
-        }
+//            ENDHLSL
+//        }
     }
 }

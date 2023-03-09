@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -33,11 +34,23 @@ public class GameController : MonoBehaviour
         set => _toBossStage = value;
     }
 
+    Action _gameEnd;
+
+    public Action GameEnd
+    {
+        get => _gameEnd;
+        set => _gameEnd = value;
+    }
+
     Transform _playerTransform;
+    AudioSource _audioSource;
 
     private void Start()
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        _audioSource = GetComponent<AudioSource>();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -48,6 +61,7 @@ public class GameController : MonoBehaviour
             _abilityCount--;
             _ability1.Invoke();
             Debug.Log("Q");
+            _audioSource.Play();
         }
     }
 
@@ -63,10 +77,15 @@ public class GameController : MonoBehaviour
         _currentEnemyCount--;
 
         // ìGÇ™0Ç…Ç»Ç¡ÇΩÇÁBossÇÃÉVÅ[ÉìÇ…îÚÇ‘
-        if (_currentEnemyCount == 0)
+        if (_currentEnemyCount <= 0)
         {
-            _toBossStage.Invoke();
+            _toBossStage();
             _playerTransform.position = _bossStageStart.position;
         }
+    }
+
+    public void ToTitle()
+    {
+        SceneManager.LoadScene("Title");
     }
 }

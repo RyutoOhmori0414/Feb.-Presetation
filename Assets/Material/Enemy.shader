@@ -2,11 +2,11 @@ Shader "Custom/Enemy"
 {
     Properties
     {
-        _Color ("MainColor", Color) = (1, 1, 1, 1)
-        _BackColor ("BackColor", Color) = (1, 1, 1, 1)
+        [HDR]_Color ("MainColor", Color) = (1, 1, 1, 1)
+        [HDR]_BackColor ("BackColor", Color) = (1, 1, 1, 1)
         _PositionFactor ("PositionFactor", Float) = 0.5
         [Space]
-        _TransparentColor ("TransparentColor", Color) = (1, 1, 1, 1)
+        [HDR]_TransparentColor ("TransparentColor", Color) = (1, 1, 1, 1)
         [Space]
         [Enum(UnityEngine.Rendering.CompareFunction)]
         _ZTest("ZTest", Float) = 1

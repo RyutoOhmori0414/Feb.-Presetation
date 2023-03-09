@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,6 +35,7 @@ public class UIController : MonoBehaviour
     {
         _controller.Ability1 += UIAbility1;
         _controller.ToBossStage += ToBossStage;
+        _controller.GameEnd += UIGameEnd;
     }
 
     void Start()
@@ -51,6 +53,7 @@ public class UIController : MonoBehaviour
     void ToBossStage()
     {
         _fadeAnimCon.StartFade();
+        RenderSettings.fog = false;
     }
 
     public void Aim()
@@ -80,5 +83,11 @@ public class UIController : MonoBehaviour
     {
         _controller.Ability1 -= UIAbility1;
         _controller.ToBossStage -= ToBossStage;
+        _controller.GameEnd -= UIGameEnd;
+    }
+
+    void UIGameEnd()
+    {
+
     }
 }
