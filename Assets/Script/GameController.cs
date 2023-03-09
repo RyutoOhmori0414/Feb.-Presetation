@@ -49,6 +49,8 @@ public class GameController : MonoBehaviour
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         _audioSource = GetComponent<AudioSource>();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -75,9 +77,9 @@ public class GameController : MonoBehaviour
         _currentEnemyCount--;
 
         // “G‚ª0‚É‚È‚Á‚½‚çBoss‚ÌƒV[ƒ“‚É”ò‚Ô
-        if (_currentEnemyCount == 0)
+        if (_currentEnemyCount <= 0)
         {
-            _toBossStage.Invoke();
+            _toBossStage();
             _playerTransform.position = _bossStageStart.position;
         }
     }

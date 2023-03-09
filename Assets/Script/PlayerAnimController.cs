@@ -32,7 +32,7 @@ public class PlayerAnimController : MonoBehaviour
         // ‚·‚×‚Ä‚Ì“G‚ğ“§‰ß‚³‚¹‚éˆ—
         Shader.EnableKeyword("_TRANSPARENT");
 
-        foreach(var n in _enemyAnimControllers)
+        foreach(var n in FindObjectsOfType<EnemyAnimController>())
         {
             n.Transparent();
         }
@@ -43,9 +43,9 @@ public class PlayerAnimController : MonoBehaviour
         // ‚·‚×‚Ä‚Ì“G‚Ì“§‰ß‚ğ–ß‚·ˆ—
         Shader.DisableKeyword("_TRANSPARENT");
 
-        foreach (var n in _enemyAnimControllers)
+        foreach (var n in FindObjectsOfType<EnemyAnimController>())
         {
-            n.Normal();
+            n?.Normal();
         }
     }
 

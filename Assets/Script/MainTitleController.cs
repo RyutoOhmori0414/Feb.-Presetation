@@ -25,6 +25,8 @@ public class MainTitleController : MonoBehaviour
     void Start()
     {
         _state = TitleState.Start;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     // Update is called once per frame
